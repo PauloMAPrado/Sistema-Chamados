@@ -1,0 +1,56 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UID: 1001
+        GID: 1001
+    container_name: chamados_app
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    environment:
+      APACHE_DOCUMENT_ROOT: /var/www/html/public
+
+  db:
+    image: mariadb:11
+    container_name: chamados_db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: chamados
+      MARIADB_USER: chamados
+      MARIADB_PASSWORD: chamados
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: chamados_pma
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    depends_on:
+      - db
+  
+  node:
+    image: node:20
+    container_name: tarefas_node
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    profiles: ["tools"]
+  
+volumes:
+  dbdata:
