@@ -13,7 +13,22 @@ return new class extends Migration
     {
         Schema::create('chamados', function (Blueprint $table) {
             $table->id();
+            $table->string('titulo');
+            $table->text('descricao');
+            $table->enum('prioridade', ['baixa', 'média', 'alta']);
+            $table->enum('status', ['aberto', 'em andamento', 'fechado'])->default('aberto');
+            $table->date('data_abertura');
+            
+
+
+            // Relacionamentos com RESTRICT - impede exclusão de pais com filhos
+            // o cascade exclui o pai
+            $table->foreignId('tecnico_id')->constrained('tecnicos')->restrictOnDelete();
+            $table->foreignId('categoria_id')->constrained('categorias')->restrictOnDelete();
+
             $table->timestamps();
+
+        
         });
     }
 
