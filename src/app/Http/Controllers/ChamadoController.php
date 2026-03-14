@@ -3,63 +3,79 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chamado;
+use App\Models\Categoria;
+use App\Models\Tecnico;
 use Illuminate\Http\Request;
 
 class ChamadoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return view('chamados.index', [
+            'chamados' => Chamado::with(['tecnico', 'categoria'])->get(),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('chamados.create', [
+            'tecnicos'   => Tecnico::all(),
+            'categorias' => Categoria::all(),
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'titulo'       => 'required|string|max:255',
+            'descricao'    => 'required|string',
+            'prioridade'   => 'required|in:baixa,média,alta',
+            'status'       => 'required|in:aberto,em andamento,fechado',
+            'data_abertura'=> 'required|date',
+            'tecnico_id'   => 'required|exists:tecnicos,id',
+            'categoria_id' => 'required|exists:categorias,id',
+        ]);
+
+        Chamado::create($data);
+
+        return redirect()->route('chamados.index')->with('ok', 'Chamado criado com sucesso.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Chamado $chamado)
     {
-        //
+        return view('chamados.show', compact('chamado'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Chamado $chamado)
     {
-        //
+        return view('chamados.edit', [
+            'chamado'    => $chamado,
+            'tecnicos'   => Tecnico::all(),
+            'categorias' => Categoria::all(),
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Chamado $chamado)
     {
-        //
+        $data = $request->validate([
+            'titulo'       => 'required|string|max:255',
+            'descricao'    => 'required|string',
+            'prioridade'   => 'required|in:baixa,média,alta',
+            'status'       => 'required|in:aberto,em andamento,fechado',
+            'data_abertura'=> 'required|date',
+            'tecnico_id'   => 'required|exists:tecnicos,id',
+            'categoria_id' => 'required|exists:categorias,id',
+        ]);
+
+        $chamado->update($data);
+
+        return redirect()->route('chamados.index')->with('ok', 'Chamado atualizado com sucesso.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Chamado $chamado)
     {
-        //
+        $chamado->delete();
+
+        return redirect()->route('chamados.index')->with('ok', 'Chamado removido.');
     }
 }
