@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tecnico extends Model
 {
-    //
+    protected $fillable = ['nome', 'email', 'especialidade'];
 }
