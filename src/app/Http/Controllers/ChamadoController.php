@@ -27,13 +27,13 @@ class ChamadoController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'titulo'       => 'required|string|max:255',
-            'descricao'    => 'required|string',
-            'prioridade'   => 'required|in:baixa,média,alta',
-            'status'       => 'required|in:aberto,em andamento,fechado',
-            'data_abertura'=> 'required|date',
-            'tecnico_id'   => 'required|exists:tecnicos,id',
-            'categoria_id' => 'required|exists:categorias,id',
+            'titulo'        => ['required', 'string', 'max:255'],
+            'descricao'     => ['required', 'string'],
+            'prioridade'    => ['required', 'in:baixa,média,alta'],
+            'status'        => ['required', 'in:aberto,em andamento,fechado'],
+            'data_abertura' => ['required', 'date'],
+            'tecnico_id'    => ['required', 'exists:tecnicos,id'],
+            'categoria_id'  => ['required', 'exists:categorias,id'],
         ]);
 
         Chamado::create($data);
@@ -57,14 +57,14 @@ class ChamadoController extends Controller
 
     public function update(Request $request, Chamado $chamado)
     {
-        $data = $request->validate([
-            'titulo'       => 'required|string|max:255',
-            'descricao'    => 'required|string',
-            'prioridade'   => 'required|in:baixa,média,alta',
-            'status'       => 'required|in:aberto,em andamento,fechado',
-            'data_abertura'=> 'required|date',
-            'tecnico_id'   => 'required|exists:tecnicos,id',
-            'categoria_id' => 'required|exists:categorias,id',
+        $dados = $request->validate([
+            'titulo'        => ['required', 'string', 'max:255'],
+            'descricao'     => ['required', 'string'],
+            'prioridade'    => ['required', 'in:baixa,média,alta'],
+            'status'        => ['required', 'in:aberto,em andamento,fechado'],
+            'data_abertura' => ['required', 'date'],
+            'tecnico_id'    => ['required', 'exists:tecnicos,id'],
+            'categoria_id'  => ['required', 'exists:categorias,id'],
         ]);
 
         $chamado->update($data);
