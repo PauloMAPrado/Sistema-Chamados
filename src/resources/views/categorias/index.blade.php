@@ -15,7 +15,7 @@
             <tr>
                 <th class="px-4 py-3 text-left">#</th>
                 <th class="px-4 py-3 text-left">Nome</th>
-                <th class="px-4 py-3 text-left">Horas (SLA)</th>
+                <th class="px-4 py-3 text-left">Horas</th>
                 <th class="px-4 py-3"></th>
             </tr>
         </thead>
