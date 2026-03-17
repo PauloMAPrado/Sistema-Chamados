@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('chamados', function (Blueprint $table) {
@@ -16,13 +13,9 @@ return new class extends Migration
             $table->string('titulo');
             $table->text('descricao');
             $table->enum('prioridade', ['baixa', 'média', 'alta']);
-            $table->enum('status', ['aberto', 'em andamento', 'fechado'])->default('aberto');
+            $table->enum('status', ['aberto', 'em_atendimento', 'resolvido', 'fechado'])->default('aberto');
             $table->date('data_abertura');
             
-
-
-            // Relacionamentos com RESTRICT - impede exclusão de pais com filhos
-            // o cascade exclui o pai
             $table->foreignId('tecnico_id')->constrained('tecnicos')->restrictOnDelete();
             $table->foreignId('categoria_id')->constrained('categorias')->restrictOnDelete();
 
@@ -32,9 +25,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('chamados');
