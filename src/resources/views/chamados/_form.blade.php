@@ -28,11 +28,30 @@
     <div>
         <label class="block text-sm font-medium text-gray-700">Status</label>
         <select name="status" class="mt-1 w-full border rounded px-3 py-2 @error('status') border-red-500 @enderror">
-            @foreach(['aberto', 'em andamento', 'fechado'] as $s)
-                <option value="{{ $s }}" {{ old('status', $chamado->status ?? 'aberto') == $s ? 'selected' : '' }}>
-                    {{ ucfirst($s) }}
-                </option>
-            @endforeach
+            @php
+                $statuses = ['aberto', 'em_atendimento', 'resolvido', 'fechado'];
+                $current = old('status', $chamado->status ?? 'aberto');
+            @endphp
+
+            @if(isset($chamado))
+                @foreach($statuses as $s)
+                    @if($s === 'resolvido' && ! (Auth::check() && Auth::user()->can('resolve', $chamado)))
+                        @continue
+                    @endif
+
+                    @if($s === 'fechado' && ! (Auth::check() && Auth::user()->can('close', $chamado)))
+                        @continue
+                    @endif
+
+                    <option value="{{ $s }}" {{ $current == $s ? 'selected' : '' }}>{{ str_replace('_', ' ', ucfirst($s)) }}</option>
+                @endforeach
+            @else
+                <option value="aberto" {{ $current == 'aberto' ? 'selected' : '' }}>Aberto</option>
+                <option value="em_atendimento" {{ $current == 'em_atendimento' ? 'selected' : '' }}>Em atendimento</option>
+                @if(Auth::check() && in_array(Auth::user()->role ?? 'user', ['tecnico','admin']))
+                    <option value="resolvido" {{ $current == 'resolvido' ? 'selected' : '' }}>Resolvido</option>
+                @endif
+            @endif
         </select>
         @error('status') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
     </div>
