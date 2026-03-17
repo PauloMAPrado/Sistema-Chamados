@@ -21,7 +21,7 @@ class TecnicoController extends Controller
 
     public function store(Request $request)
     {
-        $dados = $request->validate([
+        $data = $request->validate([
             'nome'          => ['required', 'string', 'max:255'],
             'email'         => ['required', 'email', 'unique:tecnicos,email'],
             'especialidade' => ['required', 'string', 'max:255'],
@@ -39,7 +39,7 @@ class TecnicoController extends Controller
 
     public function update(Request $request, Tecnico $tecnico)
     {
-        $dados = $request->validate([
+        $data = $request->validate([
             'nome'          => ['required', 'string', 'max:255'],
             'email'         => ['required', 'email', 'unique:tecnicos,email,' . $tecnico->id],
             'especialidade' => ['required', 'string', 'max:255'],
