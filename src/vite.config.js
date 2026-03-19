@@ -17,7 +17,6 @@ export default defineConfig({
         host: '0.0.0.0',
         port: 5173,
         watch: {
-            // ignored: ['**/storage/framework/views/**'],
             usePolling: true
         },
     },
